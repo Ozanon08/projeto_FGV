@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required
 from .forms import MovieForm
 from django.contrib.auth import logout
+from rest_framework import viewsets
+from .serializers import MovieSerializer
 
 #VIEWS
 
@@ -114,6 +116,12 @@ def mark_watched(request, movie_pk):
         watched = True
 
     return JsonResponse({"status": "success", "watched": watched})
+
+
+#API
+class MovieViewSet(viewsets.ModelViewSet):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
 
 
 

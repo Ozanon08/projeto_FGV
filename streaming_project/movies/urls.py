@@ -2,6 +2,11 @@ from django.urls import path, include
 from .views import MovieListView, MovieDetailView, favorite_movie, MovieCreateView, MovieUpdateView, MovieDeleteView
 from . import views
 from django.contrib.auth import views as auth_views
+from rest_framework.routers import DefaultRouter
+from .views import MovieViewSet
+
+router = DefaultRouter()
+router.register(r'movies', MovieViewSet)
 
 
 app_name = 'movies'
@@ -9,6 +14,8 @@ app_name = 'movies'
 urlpatterns = [
     #URLS Gerais
     path('', views.movie_list, name='movie_list'),
+    path('api/', include(router.urls)),
+    
 
         #DETALHES
     path('<int:movie_id>/', views.movie_detail, name='movie_detail'),
