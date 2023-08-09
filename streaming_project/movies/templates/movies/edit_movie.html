@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Filme - {{ movie.title }}</title>
+    <style>
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .remove-button {
+            background-color: #ff5555;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+        .remove-button:hover {
+            background-color: #cc0000;
+        }
+
+        .back-button {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Editar Filme - {{ movie.title }}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="title">Título:</label>
+        <input type="text" name="title" value="{{ movie.title }}" required>
+
+        <label for="description">Descrição:</label>
+        <textarea name="description" required>{{ movie.description }}</textarea>
+
+        <label for="trailer_url">Trailer (URL do YouTube):</label>
+        <input type="text" name="trailer_url" value="{{ movie.trailer_url }}" >
+
+        <label for="cover_image">Capa:</label>
+        <input type="file" name="cover_image" accept="image/*">
+        {% if movie.cover_image %}
+            <img src="{{ movie.cover_image.url }}" alt="{{ movie.title }} Cover Image" style="max-width: 200px;">
+        {% endif %}
+        
+
+        <input type="submit" value="Save Changes">
+
+        <button class="back-button" onclick="goToMovieList()">Voltar para lista de filmes</button>
+    </form>
+
+    <form method="post" action="{% url 'movies:remove_movie' movie.pk %}">
+        {% csrf_token %}
+        <input type="hidden" name="movie_id" value="{{ movie.pk }}">
+        <button type="submit" class="remove-button">Remover Filme</button>
+    </form>
+
+    <script>
+        function goToMovieList() {
+            window.location.href = "{% url 'movies:movie_list' %}";
+        }
+    </script>
+</body>
+</html>
